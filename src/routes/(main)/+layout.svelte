@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '../../app.postcss';
-	import { AppShell, AppBar } from '@skeletonlabs/skeleton';
+	import { AppShell, AppBar, initializeStores } from '@skeletonlabs/skeleton';
 	import config from '$lib/config';
 
 	import hljs from 'highlight.js/lib/core';
@@ -20,8 +20,12 @@
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
 	import { storePopup } from '@skeletonlabs/skeleton';
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
+	initializeStores();
+
+	import { Drawer } from '@skeletonlabs/skeleton';
 </script>
 
+<Drawer />
 <AppShell>
 	<svelte:fragment slot="header">
 
