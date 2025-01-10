@@ -28,6 +28,18 @@ export default {
 						name: 'wintry',
 						enhancements: true,
 					},
+					{
+						name: 'modern',
+						enhancements: true,
+					},
+					{
+						name: 'seafoam',
+						enhancements: true,
+					},
+					{
+						name: 'hamlindigo',
+						enhancements: true,
+					}
 				],
 			},
 		}),

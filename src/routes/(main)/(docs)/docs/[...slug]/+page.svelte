@@ -46,15 +46,20 @@
 <!-- Drawer -->
 <Drawer>
     <nav class="list-nav p-4">
-        {#each data.props.files as file}
-            {@const isActive = data.props.slug === file.path}
-            <a
-                href="/docs/{file.path}"
-                class="block px-4 py-2 rounded-lg {isActive ? 'bg-primary-500 text-white' : 'hover:bg-surface-500/10'}"
-            >
-                {file.title}
-            </a>
-        {/each}
+        <div class="p-4">
+            <div class="h-4"></div>
+            <div class="space-y-2">
+                {#each data.props.files as file}
+                    {@const isActive = data.props.slug === file.path}
+                    <a
+                        href="/docs/{file.path}"
+                        class="block px-4 py-2 rounded-lg {isActive ? 'bg-primary-500 text-white' : 'hover:bg-surface-500/10'}"
+                    >
+                        {file.title}
+                    </a>
+                {/each}
+            </div>
+        </div>
     </nav>
 </Drawer>
 
@@ -62,19 +67,23 @@
 <div class="flex">
     <!-- Sidebar (hidden on mobile) -->
     <div class="hidden md:block w-64 h-screen bg-surface-700/5 p-4 border-r border-surface-500/20 sticky top-0">
-        <nav class="space-y-1">
-            {#each data.props.files as file}
-                {@const isActive = data.props.slug === file.path}
-                <a
-                    href="/docs/{file.path}"
-                    class="block px-4 py-2 rounded-lg {isActive ? 'bg-primary-500 text-white' : 'hover:bg-surface-500/10'}"
-                >
-                    {file.title}
-                </a>
-            {/each}
-        </nav>
+        <div class="p-4">
+            <div class="h-4"></div>
+            <div class="space-y-2">
+                {#each data.props.files as file}
+                    {@const isActive = data.props.slug === file.path}
+                    <a
+                        href="/docs/{file.path}"
+                        class="block px-4 py-2 rounded-lg {isActive ? 'bg-primary-500 text-white' : 'hover:bg-surface-500/10'}"
+                    >
+                        {file.title}
+                    </a>
+                {/each}
+            </div>
+        </div>
     </div>
 
+    <!-- Content -->
     <div class="flex-1 container mx-auto px-4 py-8 md:px-8">
         {#if error}
             <p class="text-error-500">Error: {error.message}</p>

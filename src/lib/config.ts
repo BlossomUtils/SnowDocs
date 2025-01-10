@@ -1,8 +1,8 @@
 export default {
-    title: 'Snow',
+    title: 'Blossom Essentials',
     discord: '/discord',
     github: '/github',
     developer: 'https://amethystdev.com',
-    description: 'A modern, open-source static-site generator, for making docs websites, using SvelteKit, Skeleton and TailwindCSS.',
+    description: 'An open-source, feature-rich, MCBE addon for your server!',
     logo: '/logo.svg'
 }

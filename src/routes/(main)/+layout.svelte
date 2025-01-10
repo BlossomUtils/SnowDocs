@@ -31,7 +31,8 @@
 
 		<AppBar>
 			<svelte:fragment slot="lead">
-				<a href='/'><img src={config.logo} alt='{config.title} Logo' /></a>
+				<a href='/'><h3 class='text-2xl'>🌸</h3></a>
+				<div class="h-4"></div>
 			</svelte:fragment>
 			<a href='/'><strong class="text-xl">{config.title}</strong></a>
 			<div class="h-1"></div>
