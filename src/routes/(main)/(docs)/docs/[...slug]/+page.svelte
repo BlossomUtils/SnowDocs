@@ -24,7 +24,9 @@
         folderStates[folderName] = !folderStates[folderName];
         folderStates = folderStates;
     }
-
+    for (const part of data.props.slug.split('/').slice(0, -1)) {
+        folderStates[part] = true;
+    }
     async function renderMarkdown() {
         try {
             if (data.props.markdown) {
@@ -35,7 +37,7 @@
         } catch (err) {
             error = err instanceof Error ? err : new Error('Unknown error');
         }
-    }
+    } 
 
     $: if (data.props.markdown) {
         renderMarkdown();
@@ -45,7 +47,11 @@
         drawerStore.set({ open: true });
     }
 </script>
-
+<style>
+    .chevron {
+      transition: transform 0.1s ease-in-out; /* Smooth animation */
+    }
+</style>
 <button class="btn-icon variant-ghost-surface md:hidden fixed top-[4.5rem] right-4 z-20" on:click={openDrawer}>
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -57,10 +63,25 @@
 {#if folder}
     <div class="ml-2">
         <button
-            class="flex items-center px-4 py-2 hover:bg-surface-500/10 rounded-lg"
+            class="flex items-center px-4 py-2 w-full hover:bg-surface-500/10 rounded-lg"
             on:click={() => toggleFolder(folder.name)}
         >
-            <span class="mr-2">{folderStates[folder.name] ? '▼' : '▶'}</span>
+            <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="chevron mr-2"
+            style="transform: rotate({folderStates[folder.name] ? 0 : -90}deg);"
+        >
+            <path d="M6 9l6 6 6-6"></path>
+        </svg>
+        
             <span>{folder.name}</span>
         </button>
         
@@ -99,6 +120,7 @@
 
                             {#each data.props.files.folders || [] as folder}
                                 <svelte:self {data} folder={folder} />
+                                <div class="h-4"></div>
                             {/each}
                         </div>
                     {/if}
