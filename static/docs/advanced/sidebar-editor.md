@@ -1,5 +1,5 @@
 ---
-title: Advanced/Sidebar-Editor
+title: Sidebar Editor
 sidebar_position: 7
 ---
 # Sidebar Editor

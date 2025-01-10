@@ -1,5 +1,5 @@
 ---
-title: Basics/Installation
+title: Installation
 sidebar-position: 1
 ---
 

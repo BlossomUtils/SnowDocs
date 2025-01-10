@@ -1,5 +1,5 @@
 ---
-title: Basics/Ranks
+title: Ranks
 sidebar-position: 4
 ---
 # Ranks

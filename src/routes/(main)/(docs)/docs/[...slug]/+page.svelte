@@ -1,17 +1,29 @@
-<script>
+<script lang="ts">
     import { Carta } from 'carta-md';
     import { Drawer } from '@skeletonlabs/skeleton';
     import { getDrawerStore } from '@skeletonlabs/skeleton';
 
     /** @type {import('./$types').PageData} */
     export let data;
+    export let folder = undefined;
+
     const carta = new Carta({
         sanitize: false
     });
 
     const drawerStore = getDrawerStore();
     let html = '';
-    let error = null;
+    let error: Error | null = null;
+
+    interface FolderState {
+        [key: string]: boolean;
+    }
+    let folderStates: FolderState = {};
+
+    function toggleFolder(folderName: string) {
+        folderStates[folderName] = !folderStates[folderName];
+        folderStates = folderStates;
+    }
 
     async function renderMarkdown() {
         try {
@@ -21,7 +33,7 @@
                 throw new Error('No file found at this location');
             }
         } catch (err) {
-            error = err;
+            error = err instanceof Error ? err : new Error('Unknown error');
         }
     }
 
@@ -34,7 +46,6 @@
     }
 </script>
 
-<!-- Mobile Menu Button -->
 <button class="btn-icon variant-ghost-surface md:hidden fixed top-[4.5rem] right-4 z-20" on:click={openDrawer}>
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -43,56 +54,94 @@
     </svg>
 </button>
 
-<!-- Drawer -->
-<Drawer>
-    <nav class="list-nav p-4">
-        <div class="p-4">
-            <div class="h-4"></div>
-            <div class="space-y-2">
-                {#each data.props.files as file}
-                    {@const isActive = data.props.slug === file.path}
+{#if folder}
+    <div class="ml-2">
+        <button
+            class="flex items-center px-4 py-2 hover:bg-surface-500/10 rounded-lg"
+            on:click={() => toggleFolder(folder.name)}
+        >
+            <span class="mr-2">{folderStates[folder.name] ? '▼' : '▶'}</span>
+            <span>{folder.name}</span>
+        </button>
+        
+        {#if folderStates[folder.name]}
+            <div class="ml-4 space-y-1">
+                {#each folder.files || [] as file}
                     <a
                         href="/docs/{file.path}"
-                        class="block px-4 py-2 rounded-lg {isActive ? 'bg-primary-500 text-white' : 'hover:bg-surface-500/10'}"
+                        class="block px-4 py-2 rounded-lg {data.props.slug === file.path ? 'bg-primary-500 text-white' : 'hover:bg-surface-500/10'}"
                     >
                         {file.title}
                     </a>
                 {/each}
-            </div>
-        </div>
-    </nav>
-</Drawer>
-
-<!-- Desktop Layout -->
-<div class="flex">
-    <!-- Sidebar (hidden on mobile) -->
-    <div class="hidden md:block w-64 h-screen bg-surface-700/5 p-4 border-r border-surface-500/20 sticky top-0">
-        <div class="p-4">
-            <div class="h-4"></div>
-            <div class="space-y-2">
-                {#each data.props.files as file}
-                    {@const isActive = data.props.slug === file.path}
-                    <a
-                        href="/docs/{file.path}"
-                        class="block px-4 py-2 rounded-lg {isActive ? 'bg-primary-500 text-white' : 'hover:bg-surface-500/10'}"
-                    >
-                        {file.title}
-                    </a>
+                {#each Object.values(folder.folders || {}) as subfolder}
+                    <svelte:self {data} folder={subfolder} />
                 {/each}
-            </div>
-        </div>
-    </div>
-
-    <!-- Content -->
-    <div class="flex-1 container mx-auto px-4 py-8 md:px-8">
-        {#if error}
-            <p class="text-error-500">Error: {error.message}</p>
-        {:else if !html}
-            <p class="text-surface-500">Loading...</p>
-        {:else}
-            <div class="prose prose-slate dark:prose-invert max-w-none">
-                {@html html}
             </div>
         {/if}
     </div>
-</div>
+{:else}
+    <Drawer>
+        <nav class="list-nav p-4">
+            <div class="p-4">
+                <div class="h-4"></div>
+                <div class="sidebar-content">
+                    {#if data.props.files}
+                        <div class="space-y-2">
+                            {#each data.props.files.rootFiles || [] as file}
+                                <a
+                                    href="/docs/{file.path}"
+                                    class="block px-4 py-2 rounded-lg {data.props.slug === file.path ? 'bg-primary-500 text-white' : 'hover:bg-surface-500/10'}"
+                                >
+                                    {file.title}
+                                </a>
+                            {/each}
+
+                            {#each data.props.files.folders || [] as folder}
+                                <svelte:self {data} folder={folder} />
+                            {/each}
+                        </div>
+                    {/if}
+                </div>
+            </div>
+        </nav>
+    </Drawer>
+
+    <div class="flex">
+        <div class="hidden md:block w-64 h-screen bg-surface-700/5 p-4 border-r border-surface-500/20 sticky top-0">
+            <div class="p-4">
+                <div class="h-4"></div>
+                <div class="sidebar-content">
+                    {#if data.props.files}
+                        <div class="space-y-2">
+                            {#each data.props.files.rootFiles || [] as file}
+                                <a
+                                    href="/docs/{file.path}"
+                                    class="block px-4 py-2 rounded-lg {data.props.slug === file.path ? 'bg-primary-500 text-white' : 'hover:bg-surface-500/10'}"
+                                >
+                                    {file.title}
+                                </a>
+                            {/each}
+
+                            {#each data.props.files.folders || [] as folder}
+                                <svelte:self {data} folder={folder} />
+                            {/each}
+                        </div>
+                    {/if}
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-1 container mx-auto px-4 py-8 md:px-8">
+            {#if error}
+                <p class="text-error-500">Error: {error.message}</p>
+            {:else if !html}
+                <p class="text-surface-500">Loading...</p>
+            {:else}
+                <div class="prose prose-slate dark:prose-invert max-w-none">
+                    {@html html}
+                </div>
+            {/if}
+        </div>
+    </div>
+{/if}

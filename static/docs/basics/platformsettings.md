@@ -1,5 +1,5 @@
 ---
-title: Basics/PlatformSettings
+title: Platform Settings
 sidebar-position: 3
 ---
 # Platform Settings

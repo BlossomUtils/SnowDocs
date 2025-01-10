@@ -1,5 +1,5 @@
 ---
-title: Advanced/UI-Builder
+title: UI Builder
 sidebar_position: 8
 ---
 # UI Builder
