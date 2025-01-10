@@ -1,6 +1,6 @@
 ---
 title: Basics/Config-UI
-sidebar-position: 2
+sidebar-position: 5
 ---
 
 # Config UI
