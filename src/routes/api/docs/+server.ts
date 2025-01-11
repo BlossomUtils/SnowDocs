@@ -130,7 +130,8 @@ export async function GET({ request }) {
                 const content = fs.existsSync(instanceJsonPath) ? JSON.parse(fs.readFileSync(instanceJsonPath).toString()) : {};
                 instances.push({
                     name: content.name ? content.name : "Latest",
-                    path: item
+                    path: item,
+                    sidebarPosition: 0
                 })
                 continue;
             }
@@ -138,11 +139,14 @@ export async function GET({ request }) {
                 const content = JSON.parse(fs.readFileSync(instanceJsonPath).toString())
                 instances.push({
                     name: content.name ? content.name : item,
-                    path: item
+                    path: item,
+                    sidebarPosition: content.sidebarposition ? content.sidebarPosition : 999
                 })
             }
         }
     }
+
+    instances = instances.sort((a,b)=>a.sidebarPosition-b.sidebarPosition);
 
     let hasFile = await fs.existsSync(path.join(process.cwd(), 'static', paramValue ? paramValue : "docs", "instance.json"))
     if(paramValue != "docs" && !hasFile) return json({
