@@ -3,6 +3,8 @@ import type { PageLoad } from './$types';
 interface Frontmatter {
     title?: string;
     'sidebar-position'?: number;
+    description?: string;
+    banner?: string;
 }
 
 function parseFrontmatter(rawContent: string): { frontmatter: Frontmatter; content: string } {
@@ -24,12 +26,14 @@ function parseFrontmatter(rawContent: string): { frontmatter: Frontmatter; conte
                 frontmatter[key] = parseInt(value);
             } else if (key === 'title') {
                 frontmatter.title = value;
+            } else {
+                // @ts-ignore
+                frontmatter[key] = value;
             }
         }
         i++;
     }
 
-    // Skip the closing --- and join the rest as content
     const mainContent = lines.slice(i + 1).join('\n');
 
     return { frontmatter, content: mainContent };
@@ -38,8 +42,8 @@ function parseFrontmatter(rawContent: string): { frontmatter: Frontmatter; conte
 export const load: PageLoad = async ({ params, fetch }) => {
     const { slug } = params;
     const [markdownResponse, filesResponse] = await Promise.all([
-        fetch(`/docs/${slug}.md`),
-        fetch('/api/docs')
+        fetch(`/${params.docspage}/${slug}.md`),
+        fetch(`/api/docs?instance=${params.docspage}`)
     ]);
 
     if (!markdownResponse.ok) {
@@ -60,7 +64,9 @@ export const load: PageLoad = async ({ params, fetch }) => {
         props: {
             markdown: content,
             files,
-            slug
+            slug,
+            frontmatter,
+            docspage: params.docspage
         }
     };
 };
