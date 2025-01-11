@@ -63,10 +63,10 @@
     </svg>
 </button>
 <svelte:head>
-    {#if data.props && data.props.frontmatter.title}
+    {#if data.props && data.props.frontmatter && data.props.frontmatter.title}
         <meta property="og:title" content={data.props.frontmatter.title} />
     {/if}
-    {#if data.props && data.props.frontmatter.description}
+    {#if data.props && data.props.frontmatter && data.props.frontmatter.description}
         <meta property="og:description" content={data.props.frontmatter.description} />
     {/if}
     <meta property="og:type" content="website">
@@ -118,14 +118,16 @@
     <Drawer>
         <nav class="list-nav p-4">
             <div class="p-4">
-                <select name="" id="" bind:value={instance} class="select" on:change={()=>{
-                    location.pathname = `/${instance}/index`;
-                    // location.reload();
-                }}>
-                        {#each data.props.files.instances.slice().reverse() as instance}
-                            <option value={instance.path}>{instance.name}</option>
-                        {/each}
-                </select>
+                {#if data.props.files.instances.length > 1}
+                    <select name="" id="" bind:value={instance} class="select" on:change={()=>{
+                        location.pathname = `/${instance}/index`;
+                        // location.reload();
+                    }}>
+                            {#each data.props.files.instances.slice().reverse() as instance}
+                                <option value={instance.path}>{instance.name}</option>
+                            {/each}
+                    </select>
+                {/if}
                 <div class="h-4"></div>
                 <div class="sidebar-content">
                     {#if data.props.files}
@@ -153,14 +155,16 @@
     <div class="flex">
         <div class="hidden md:block w-64 h-screen bg-surface-700/5 p-4 border-r border-surface-500/20 sticky top-0">
             <div class="p-4">
-                <select name="" id="" bind:value={instance} class="select" on:change={()=>{
-                    location.pathname = `/${instance}/index`;
-                    // location.reload();
-                }}>
-                        {#each data.props.files.instances.slice().reverse() as instance}
-                            <option value={instance.path}>{instance.name}</option>
-                        {/each}
-                </select>
+                {#if data.props.files.instances.length > 1}
+                    <select name="" id="" bind:value={instance} class="select" on:change={()=>{
+                        location.pathname = `/${instance}/index`;
+                        // location.reload();
+                    }}>
+                            {#each data.props.files.instances.slice().reverse() as instance}
+                                <option value={instance.path}>{instance.name}</option>
+                            {/each}
+                    </select>
+                {/if}
                 <div class="h-4"></div>
                 <div class="sidebar-content">
                     {#if data.props.files}
